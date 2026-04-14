@@ -30,8 +30,6 @@ public class Task {
     (name = "priority", length = 20)
     private String priority;
 
-    // Add these fields to your existing Task.java, after the 'priority' field
-
     // Many Tasks belong to one User.
     // @JoinColumn creates a 'user_id' foreign key column in the tasks table.
     // fetch = FetchType.LAZY overrides the @ManyToOne default (which is Eager) to Lazy.
