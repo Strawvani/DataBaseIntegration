@@ -29,8 +29,7 @@ public class Category {
     (mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
-    // Setters and Getters
-
+    // No arg and parameterized Constructor
     public Category() {}
 
     public Category(String name, String description) {
@@ -38,6 +37,7 @@ public class Category {
         this.description = description;
     }
 
+    // Getters and Setters
     public Long getId()               {
         return id; }
 
