@@ -3,6 +3,8 @@ package com.fourimpact.module5_taskmanager;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -46,6 +48,23 @@ public class Task {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    // @JoinTable defines the join table that links tasks and tags.
+    // 'task_tags' is the join table name, with two foreign key columns.
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "task_tags",
+            joinColumns        = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags = new ArrayList<>();
+
+    public List<Tag> getTags() { return tags; }
+
+    // Helper method -- always use this to add a tag, never add directly to the list.
+    public void addTag(Tag tag) {
+        this.tags.add(tag);       // add tag to this task's list
+        tag.getTasks().add(this); // add this task to the tag's list (keep both sides in sync)
+    }
 
     // @CreationTimestamp is a Hibernate annotation that automatically sets
     // this field to the current timestamp when the row is first saved.
