@@ -30,6 +30,25 @@ public class Task {
     (name = "priority", length = 20)
     private String priority;
 
+    // Add these fields to your existing Task.java, after the 'priority' field
+
+    // Many Tasks belong to one User.
+    // @JoinColumn creates a 'user_id' foreign key column in the tasks table.
+    // fetch = FetchType.LAZY overrides the @ManyToOne default (which is Eager) to Lazy.
+    // This means the User will only be loaded from the database when you call getUser().
+    // This is best practice -- we use JOIN FETCH in @Query when we need the User loaded.
+    // (Lazy vs Eager loading is explained in full in Section 8.1.)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // Many Tasks belong to one Category.
+    // Same reasoning as above -- Lazy fetch overrides the Eager default.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+
     // @CreationTimestamp is a Hibernate annotation that automatically sets
     // this field to the current timestamp when the row is first saved.
     @CreationTimestamp
@@ -53,6 +72,11 @@ public class Task {
     public String getPriority()          { return priority; }
     public void setPriority(String p)    { this.priority = p; }
     public LocalDateTime getCreatedAt()  { return createdAt; }
+
+    public User getUser()               { return user; }
+    public void setUser(User u)         { this.user = u; }
+    public Category getCategory()       { return category; }
+    public void setCategory(Category c) { this.category = c; }
 
     @Override
     public String toString() {
