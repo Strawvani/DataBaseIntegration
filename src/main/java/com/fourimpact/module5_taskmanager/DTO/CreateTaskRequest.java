@@ -1,4 +1,4 @@
-package com.fourimpact.module5_taskmanager.dto;
+package com.fourimpact.module5_taskmanager.DTO;
 
 // ── CreateTaskRequest.java -- what the client sends to CREATE or UPDATE a task
 public class CreateTaskRequest {

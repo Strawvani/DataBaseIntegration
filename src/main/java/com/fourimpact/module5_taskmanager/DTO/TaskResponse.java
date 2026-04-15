@@ -1,4 +1,4 @@
-package com.fourimpact.module5_taskmanager.dto;
+package com.fourimpact.module5_taskmanager.DTO;
 
 import java.time.LocalDateTime;
 
