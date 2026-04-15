@@ -1,4 +1,4 @@
-package com.fourimpact.module5_taskmanager;
+package com.fourimpact.module5_taskmanager.Entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
