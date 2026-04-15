@@ -78,6 +78,17 @@ public class Task {
     @Transient
     private String displayLabel;
 
+    // JPA requires a public no-arg constructor.
+    // Hibernate uses it to create objects when reading rows from the database.
+    public Task() {}
+
+    public Task(String title, String description, String status, String priority) {
+        this.title       = title;
+        this.description = description;
+        this.status      = status;
+        this.priority    = priority;
+    }
+
     // Getters & Setters
     public Long getId()                  { return id; }
     public String getTitle()             { return title; }
