@@ -47,8 +47,7 @@ public class TaskService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category", request.getCategoryId()));
         }
 
-        Task task = new Task(request.getTitle(), request.getDescription(),
-                request.getStatus(), request.getPriority());
+        Task task = new Task(request.getTitle(), request.getDescription(), request.getStatus(), request.getPriority());
         task.setUser(user);
         task.setCategory(category);
         return toResponse(taskRepository.save(task));
@@ -66,6 +65,12 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task", id));
         return toResponse(task);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskResponse> getTaskByStatus(String status){
+        return  taskRepository.findByStatus(status)
+                .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     // ── UPDATE ─────────────────────────────────────────────────────────────

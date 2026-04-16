@@ -39,6 +39,10 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
+    @GetMapping("/api/tasks/status/{status}")
+    public ResponseEntity<List<TaskResponse>> getTaskByStatus(@PathVariable String status){
+        return ResponseEntity.ok((taskService.getTaskByStatus(status)));
+    }
     // PUT /api/tasks/5
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @RequestBody CreateTaskRequest request) {
