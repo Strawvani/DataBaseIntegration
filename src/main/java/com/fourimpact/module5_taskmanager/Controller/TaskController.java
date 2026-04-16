@@ -3,6 +3,7 @@ package com.fourimpact.module5_taskmanager.Controller;
 import com.fourimpact.module5_taskmanager.DTO.CreateTaskRequest;
 import com.fourimpact.module5_taskmanager.DTO.TaskResponse;
 import com.fourimpact.module5_taskmanager.Service.TaskService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,4 +62,17 @@ public class TaskController {
     public ResponseEntity<TaskResponse> addTagToTask(@PathVariable Long taskId, @PathVariable Long tagId) {
         return ResponseEntity.ok(taskService.addTagToTask(taskId, tagId));
     }
+
+    // GET /api/tasks/paged?userId=1&page=0&size=5&sortBy=createdAt&direction=desc
+    @GetMapping("/paged")
+    public ResponseEntity<Page<TaskResponse>> getTasksPaged(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction) {
+
+        return ResponseEntity.ok(taskService.getTasksPaged(userId, page, size, sortBy, direction));
+    }
+
 }

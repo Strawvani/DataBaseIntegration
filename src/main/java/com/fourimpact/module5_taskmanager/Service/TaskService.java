@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 @Transactional // all methods are transactional by default; rolls back on any RuntimeException
@@ -28,7 +32,7 @@ public class TaskService {
 
     // No @Autowired needed on a single constructor -- Spring injects automatically
     // Dependency Injection
-    public TaskService (TaskRepository taskRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository){
+    public TaskService(TaskRepository taskRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
@@ -68,8 +72,8 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponse> getTaskByStatus(String status){
-        return  taskRepository.findByStatus(status)
+    public List<TaskResponse> getTaskByStatus(String status) {
+        return taskRepository.findByStatus(status)
                 .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
@@ -106,8 +110,8 @@ public class TaskService {
 
     // ── Helper: convert Task entity to TaskResponse DTO ───────────────────
     public TaskResponse toResponse(Task task) {
-        String username     = task.getUser()     != null ? task.getUser().getUsername()  : null;
-        String categoryName = task.getCategory() != null ? task.getCategory().getName()  : null;
+        String username = task.getUser() != null ? task.getUser().getUsername() : null;
+        String categoryName = task.getCategory() != null ? task.getCategory().getName() : null;
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
@@ -118,4 +122,14 @@ public class TaskService {
                 task.getCreatedAt());
     }
 
+    @Transactional(readOnly = true)
+    public Page<TaskResponse> getTasksPaged(Long userId, int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        return taskRepository
+                .findByUserIdPaginated(userId, PageRequest.of(page, size, sort))
+                .map(this::toResponse);  // converts each Task entity to a TaskResponse DTO
+    }
+    
 }
