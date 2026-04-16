@@ -26,9 +26,19 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // ── JOIN FETCH queries (explained in Section 7) ───────────────────────
     // These load related entities in a single SQL query to avoid N+1 problems.
-    @Query("SELECT t FROM Task t JOIN FETCH t.user JOIN FETCH t.category")
-    List<Task> findAllWithUserAndCategory();
+        @Query("SELECT t FROM Task t JOIN FETCH t.user JOIN FETCH t.category")
+        List<Task> findAllWithUserAndCategory();
 
+    @Query(value = "SELECT t FROM Task t WHERE t.user.id = :userId",
+            countQuery = "SELECT COUNT(t) FROM Task t WHERE t.user.id = :userId")
     Page<Task> findByUserIdPaginated(@Param("userId") Long userId, Pageable pageable);
+
+    // Add this to TaskRepository.java (alongside the existing methods)
+
+    // findByStatusAndUser -- filter tasks by both status and the user's ID.
+    // :status and :userId are named parameters bound via @Param annotations.
+    @Query("SELECT t FROM Task t WHERE t.status = :status AND t.user.id = :userId")
+    List<Task> findByStatusAndUser(@Param("status") String status,
+                                   @Param("userId") Long userId);
 
 }
